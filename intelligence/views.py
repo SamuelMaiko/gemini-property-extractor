@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .utils import DDGClient
+from .utils import GeminiClient
 
 class ExtractionView(APIView):
     """
@@ -16,7 +16,7 @@ class ExtractionView(APIView):
         if not text:
             return Response({"error": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-        client = DDGClient(model_name=model)
+        client = GeminiClient(model_name=model)
         
         # Construct the extraction prompt
         system_prompt = f"You are an expert data extractor. Extract the following details from the text: {details}. Return the results ONLY as a clean JSON object. Do not include any explanations or other text."
@@ -56,7 +56,7 @@ class ChatView(APIView):
         if not messages or not isinstance(messages, list):
             return Response({"error": "Messages must be a list of dictionaries"}, status=status.HTTP_400_BAD_REQUEST)
 
-        client = DDGClient(model_name=model)
+        client = GeminiClient(model_name=model)
         # If image is a file, read its bytes
         processed_image = image
         if image and hasattr(image, 'read'):

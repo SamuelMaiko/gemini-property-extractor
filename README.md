@@ -1,4 +1,4 @@
-# 🧠 Intelligence API (Gemini-Powered)
+# 🧠 Gemini Intelligence API (Multimodal)
 
 A standalone, high-performance API service built with **Django REST Framework** to provide AI-powered text extraction and chat capabilities. Powered by **Google Gemini 1.5 Flash**, it is highly stable, multimodal (supports vision), and cost-effective.
 
@@ -7,7 +7,6 @@ A standalone, high-performance API service built with **Django REST Framework** 
 - **Vision Support**: Analyze images via URL, Base64 strings, or direct File uploads.
 - **Multimodal Chat**: Full conversation support with image context.
 - **Usage Metadata**: Every response includes precise token consumption data.
-- **Stability**: Zero local RAM overhead; runs entirely in the cloud.
 
 ## 🛠️ Setup & Installation
 

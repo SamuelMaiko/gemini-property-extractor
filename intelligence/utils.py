@@ -106,6 +106,3 @@ class GeminiClient:
         except Exception as e:
             logger.error(f"Gemini request failed: {e}")
             return {"error": str(e)}
-
-# Alias for backward compatibility in views
-DDGClient = GeminiClient
