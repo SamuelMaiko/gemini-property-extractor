@@ -8,7 +8,7 @@ logging.basicConfig(level=logging.INFO)
 
 def test_gemini():
     print(f"Using API Key: {os.getenv('GEMINI_API_KEY')[:10]}...")
-    client = GeminiClient(model_name="gemini-2.5-flash-lite")
+    client = GeminiClient(model_name="gemini-flash-latest")
     messages = [
         {"role": "user", "content": "Extract items and quantities from: 4 red apples and 2 green bananas. Return JSON only."}
     ]

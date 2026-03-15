@@ -10,7 +10,7 @@ class ExtractionView(APIView):
     def post(self, request):
         text = request.data.get("text")
         details = request.data.get("details", "important information")
-        model = request.data.get("model", "gemini-2.0-flash")
+        model = request.data.get("model", "gemini-flash-latest")
         image = request.data.get("image") or request.FILES.get("image") # Base64, URL, or File
 
         if not text:
@@ -50,7 +50,7 @@ class ChatView(APIView):
     """
     def post(self, request):
         messages = request.data.get("messages")
-        model = request.data.get("model", "gemini-2.0-flash")
+        model = request.data.get("model", "gemini-flash-latest")
         image = request.data.get("image") or request.FILES.get("image")
 
         if not messages or not isinstance(messages, list):
