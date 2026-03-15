@@ -10,8 +10,8 @@ class ExtractionView(APIView):
     def post(self, request):
         text = request.data.get("text")
         details = request.data.get("details", "important information")
-        model = request.data.get("model", "gemini-2.5-flash-lite")
-        image = request.data.get("image") # Base64 encoded image
+        model = request.data.get("model", "gemini-2.0-flash")
+        image = request.data.get("image") or request.FILES.get("image") # Base64, URL, or File
 
         if not text:
             return Response({"error": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
@@ -25,7 +25,12 @@ class ExtractionView(APIView):
             {"role": "user", "content": f"{system_prompt}\n\nText: {text}"}
         ]
         
-        result = client.chat(messages, response_json=True, image_base64=image)
+        # If image is a file, read its bytes
+        processed_image = image
+        if hasattr(image, 'read'):
+            processed_image = image.read()
+
+        result = client.chat(messages, response_json=True, image_data=processed_image)
         
         if "error" in result:
             return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -45,14 +50,19 @@ class ChatView(APIView):
     """
     def post(self, request):
         messages = request.data.get("messages")
-        model = request.data.get("model", "gemini-2.5-flash-lite")
-        image = request.data.get("image")
+        model = request.data.get("model", "gemini-2.0-flash")
+        image = request.data.get("image") or request.FILES.get("image")
 
         if not messages or not isinstance(messages, list):
             return Response({"error": "Messages must be a list of dictionaries"}, status=status.HTTP_400_BAD_REQUEST)
 
         client = DDGClient(model_name=model)
-        result = client.chat(messages, image_base64=image)
+        # If image is a file, read its bytes
+        processed_image = image
+        if hasattr(image, 'read'):
+            processed_image = image.read()
+
+        result = client.chat(messages, image_data=processed_image)
         
         if "error" in result:
             return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
