@@ -47,7 +47,7 @@ Extracts specific details from text or images and returns **clean JSON**.
 {
   "text": "Please bring 5 blue pens to the main office",
   "details": "item, quantity, color, and destination",
-  "image": "optional_base64_or_url"
+  "image": "optional_base64_or_url" // (Optional)
 }
 ```
 
