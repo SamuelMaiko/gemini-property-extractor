@@ -10,10 +10,14 @@ A standalone, high-performance API service built with **Django REST Framework** 
 
 ## 🛠️ Setup & Installation
 
-1. **Clone the repository** (if you haven't already).
+1. **Clone the repository**:
+   ```bash
+   git clone <repo-url>
+   cd gemini-property-extractor
+   ```
 2. **Install Dependencies**:
    ```bash
-   pip install django djangorestframework google-generativeai python-dotenv Pillow django-cors-headers requests
+   pip install -r requirements.txt
    ```
 3. **Configure Environment**:
    Create a `.env` file in the root directory:
@@ -82,4 +86,4 @@ Every response follows this structure:
 ```
 
 ## 📝 License
-MIT
+This project is licensed under the [MIT License](LICENSE).
