@@ -46,19 +46,24 @@ class GeminiClient:
                 
                 # Case B: String (URL or Base64)
                 elif isinstance(image_data, str) and image_data.strip():
-                    if image_data.startswith("http"):
+                    if image_data.lower() in ["none", "null", "undefined"]:
+                        final_bytes = None
+                    elif image_data.startswith("http"):
                         import requests
                         final_bytes = requests.get(image_data, timeout=10).content
                     else:
                         import base64
-                        # Strip common base64 prefixes if present
-                        if "," in image_data:
-                            image_data = image_data.split(",")[1]
-                        # Remove whitespace/newlines that might break decoding
-                        image_data = "".join(image_data.split())
-                        final_bytes = base64.b64decode(image_data)
+                        try:
+                            # Strip common base64 prefixes if present
+                            if "," in image_data:
+                                image_data = image_data.split(",")[1]
+                            # Remove whitespace/newlines that might break decoding
+                            image_data = "".join(image_data.split())
+                            final_bytes = base64.b64decode(image_data)
+                        except:
+                            final_bytes = None
 
-                if final_bytes:
+                if final_bytes and len(final_bytes) > 20: # Minimum size for any image header
                     # Use PIL to verify image and get correct MIME type
                     from PIL import Image
                     import io
