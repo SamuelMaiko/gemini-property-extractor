@@ -11,6 +11,7 @@ class ExtractionView(APIView):
         text = request.data.get("text")
         details = request.data.get("details", "important information")
         model = request.data.get("model", "gemini-2.5-flash-lite")
+        image = request.data.get("image") # Base64 encoded image
 
         if not text:
             return Response({"error": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
@@ -24,10 +25,17 @@ class ExtractionView(APIView):
             {"role": "user", "content": f"{system_prompt}\n\nText: {text}"}
         ]
         
-        result = client.chat(messages)
+        result = client.chat(messages, response_json=True, image_base64=image)
         
         if "error" in result:
             return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        # Try to parse content as actual JSON
+        import json
+        try:
+            result["content"] = json.loads(result["content"])
+        except:
+            pass
             
         return Response(result, status=status.HTTP_200_OK)
 
@@ -38,12 +46,13 @@ class ChatView(APIView):
     def post(self, request):
         messages = request.data.get("messages")
         model = request.data.get("model", "gemini-2.5-flash-lite")
+        image = request.data.get("image")
 
         if not messages or not isinstance(messages, list):
             return Response({"error": "Messages must be a list of dictionaries"}, status=status.HTTP_400_BAD_REQUEST)
 
         client = DDGClient(model_name=model)
-        result = client.chat(messages)
+        result = client.chat(messages, image_base64=image)
         
         if "error" in result:
             return Response(result, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
