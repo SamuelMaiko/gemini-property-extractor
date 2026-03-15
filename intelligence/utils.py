@@ -37,7 +37,7 @@ class GeminiClient:
                     history.append({"role": role, "parts": [msg["content"]]})
 
             # 2. Process Image
-            if image_data:
+            if image_data and (isinstance(image_data, str) or len(image_data) > 0):
                 final_bytes = None
                 
                 # Case A: Binary Bytes (from form-data)

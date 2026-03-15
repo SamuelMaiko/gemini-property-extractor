@@ -27,7 +27,7 @@ class ExtractionView(APIView):
         
         # If image is a file, read its bytes
         processed_image = image
-        if hasattr(image, 'read'):
+        if image and hasattr(image, 'read'):
             processed_image = image.read()
 
         result = client.chat(messages, response_json=True, image_data=processed_image)
@@ -59,7 +59,7 @@ class ChatView(APIView):
         client = DDGClient(model_name=model)
         # If image is a file, read its bytes
         processed_image = image
-        if hasattr(image, 'read'):
+        if image and hasattr(image, 'read'):
             processed_image = image.read()
 
         result = client.chat(messages, image_data=processed_image)
