@@ -20,10 +20,12 @@ A standalone, high-performance API service built with **Django REST Framework** 
    pip install -r requirements.txt
    ```
 3. **Configure Environment**:
-   Create a `.env` file in the root directory:
-   ```env
-   GEMINI_API_KEY=your_google_ai_studio_key
+   Copy the example environment file and replace the placeholder with your actual Gemini API key:
+   ```bash
+   cp .env.example .env
    ```
+   Open `.env` and set your key:
+   `GEMINI_API_KEY=your_actual_key_here`
 4. **Run Migrations**:
    ```bash
    python manage.py migrate
