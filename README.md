@@ -40,52 +40,100 @@ A standalone, high-performance API service built with **Django REST Framework** 
 ### 1. Data Extraction
 **Endpoint**: `POST /api/intelligence/extract/`
 
-Extracts specific details from text or images and returns **clean JSON**.
+Extracts specific details and returns **clean JSON objects**. This endpoint is fully multimodal—it can process text, images, or both simultaneously.
 
-**Payload (JSON)**:
+#### A. Text-Only Extraction
+Use this when you have a text report (e.g., from a chat message).
+
+**Request**:
 ```json
 {
-  "text": "Please bring 5 blue pens to the main office",
-  "details": "item, quantity, color, and destination",
-  "image": "optional_base64_or_url" // (Optional)
+  "text": "Lost a black leather wallet at the main cafeteria around 2 PM",
+  "details": "item_type, color, material, location, approximate_time"
+}
+```
+**Response**:
+```json
+{
+  "content": {
+    "item_type": "wallet",
+    "color": "black",
+    "material": "leather",
+    "location": "main cafeteria",
+    "approximate_time": "2:00 PM"
+  },
+  "usage": { "prompt_tokens": 58, "candidates_tokens": 42, "total_tokens": 100 }
 }
 ```
 
-**CURL Example (Form-Data / Image Upload)**:
-```bash
-curl -X POST "http://localhost:8040/api/intelligence/extract/" \
-     -F "text=Extract details from this receipt" \
-     -F "details=total, date, merchant" \
-     -F "image=@receipt.jpg"
+#### B. Image-Only Extraction
+Use this when you have a photo (e.g., a found item) but no accompanying text.
+
+**Request**:
+```json
+{
+  "text": "Identify the object and its features",
+  "details": "object_name, color, distinctive_marks",
+  "image": "https://example.com/found-bag.jpg"
+}
+```
+**Response**:
+```json
+{
+  "content": {
+    "object_name": "Backpack",
+    "color": "Red",
+    "distinctive_marks": "White star logo on the front pocket"
+  },
+  "usage": { "prompt_tokens": 1050, "candidates_tokens": 35, "total_tokens": 1085 }
+}
+```
+
+#### C. Multimodal: Image + Caption (Recommended)
+Use this when a user sends a photo with a caption. The AI uses both to improve accuracy.
+
+**Request**:
+```json
+{
+  "text": "Found this near the parking lot entrance today",
+  "details": "object, location, condition",
+  "image": "base64_encoded_string_here"
+}
+```
+**Response**:
+```json
+{
+  "content": {
+    "object": "Car keys (Toyota)",
+    "location": "Parking lot entrance",
+    "condition": "Scratched, attached to a blue keychain"
+  },
+  "usage": { "prompt_tokens": 1080, "candidates_tokens": 38, "total_tokens": 1118 }
+}
 ```
 
 ### 2. General Chat
 **Endpoint**: `POST /api/intelligence/chat/`
+Used for generating natural language responses back to the user.
 
-General reasoning and chat interface.
-
-**Payload**:
+**Request**:
 ```json
 {
   "messages": [
-    {"role": "user", "content": "What is in this picture?"}
-  ],
-  "image": "https://example.com/photo.png"
+    {"role": "user", "content": "Generate a friendly support message for a user who reported a lost Red Backpack."}
+  ]
+}
+```
+**Response**:
+```json
+{
+  "content": "Oh no! I've officially logged your Red Backpack report. I'll keep a close eye on the listings and alert you the second a match is found! 🕵️‍♂️",
+  "usage": { "prompt_tokens": 40, "candidates_tokens": 45, "total_tokens": 85 }
 }
 ```
 
 ## 📊 Token Usage Response
-Every response follows this structure:
-```json
-{
-  "content": { ... },
-  "usage": {
-    "prompt_tokens": 54,
-    "candidates_tokens": 29,
-    "total_tokens": 83
-  }
-}
-```
+Every response includes a `usage` block. On the **Free Tier (Gemini 1.5 Flash)**, you have a limit of **1,500 requests per day**.
 
 ## 📝 License
 This project is licensed under the [MIT License](LICENSE).
