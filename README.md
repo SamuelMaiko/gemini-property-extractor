@@ -1,4 +1,4 @@
-# 🧠 Gemini Intelligence API (Multimodal)
+# 🧠 Gemini Property Extractor
 
 A standalone, high-performance API service built with **Django REST Framework** to provide AI-powered text extraction and chat capabilities. Powered by **Google Gemini 1.5 Flash**, it is highly stable, multimodal (supports vision), and cost-effective.
 
