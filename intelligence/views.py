@@ -10,12 +10,12 @@ class ExtractionView(APIView):
     def post(self, request):
         text = request.data.get("text")
         details = request.data.get("details", "important information")
-        model = request.data.get("model", "gpt-4o-mini")
+        model = request.data.get("model", "gemini-2.5-flash-lite")
 
         if not text:
             return Response({"error": "No text provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-        client = DDGClient(model=model)
+        client = DDGClient(model_name=model)
         
         # Construct the extraction prompt
         system_prompt = f"You are an expert data extractor. Extract the following details from the text: {details}. Return the results ONLY as a clean JSON object. Do not include any explanations or other text."
@@ -37,12 +37,12 @@ class ChatView(APIView):
     """
     def post(self, request):
         messages = request.data.get("messages")
-        model = request.data.get("model", "gpt-4o-mini")
+        model = request.data.get("model", "gemini-2.5-flash-lite")
 
         if not messages or not isinstance(messages, list):
             return Response({"error": "Messages must be a list of dictionaries"}, status=status.HTTP_400_BAD_REQUEST)
 
-        client = DDGClient(model=model)
+        client = DDGClient(model_name=model)
         result = client.chat(messages)
         
         if "error" in result:
